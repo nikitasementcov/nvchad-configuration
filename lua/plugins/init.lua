@@ -13,6 +13,13 @@ return {
     end,
   },
 
+  {
+    "NvChad/nvterm",
+    config = function()
+      require("nvterm").setup()
+    end,
+  },
+
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
