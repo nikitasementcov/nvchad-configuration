@@ -1,210 +1,109 @@
+require "nvchad.mappings"
+
 local map = vim.keymap.set
 
-local M = {}
+-- General mappings
 
-M.general = {
+map("n", ";", ":", { desc = "CMD enter command mode" })
+map("i", "j", "<ESC>")
+-- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
-  n = {
-    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+-- Enter command mode
+map("n", ";", ":", { desc = "enter command mode", nowait = true })
 
-    -- Close buffer + hide terminal buffer
-    ["<leader>q"] = {
+-- Close buffer
+map("n", "<leader>q", function()
+  require("nvchad.tabufline").close_buffer()
+end, { desc = "Close buffer" })
 
-      function()
-        require("nvchad.tabufline").close_buffer()
-      end,
-      "Close buffer",
-    },
+-- Save file (overwrite nvchad 'w' letter mapping)
+map("n", "<leader>w", "<cmd> w <CR>", { desc = "Save file" })
 
-    -- Save file
-    ["<leader>w"] = { "<cmd>w<CR>", "Save file" },
+-- Diagnostics (overwrite nvchad 'q' letter mapping)
+map("n", "<leader>Q", function()
+  vim.diagnostic.setloclist()
+end, { desc = "Diagnostic setloclist" })
 
-    -- Diagnostic setloclist
-    ["<leader>Q"] = {
-      vim.diagnostic.setloclist,
-      "Diagnostic setloclist",
-    },
+-- LSP formatting (overwrite formatting)
+map("n", "<leader>fm", function()
+  vim.lsp.buf.format { async = true }
+end, { desc = "LSP formatting" })
 
-    -- LSP formatting
+-- Resize splits
+map("n", "<C-w>h", ":vertical resize -5<CR>", { desc = "Resize window left" })
+map("n", "<C-w>l", ":vertical resize +5<CR>", { desc = "Resize window right" })
+map("n", "<C-w>k", ":resize -5<CR>", { desc = "Resize window up" })
+map("n", "<C-w>j", ":resize +5<CR>", { desc = "Resize window down" })
 
-    ["<leader>fm"] = {
-      function()
-        vim.lsp.buf.format { async = true }
-      end,
+-- Visual mode mappings
+map("v", ">", ">gv", { desc = "indent" })
 
-      "LSP formatting",
-    },
+-- Neotest mappings
 
-    -- Resize splits
-    ["<C-w>h"] = { ":vertical resize -5<CR>", desc = "Resize window left" },
-    ["<C-w>l"] = { ":vertical resize +5<CR>", desc = "Resize window right" },
-    ["<C-w>k"] = { ":resize -5<CR>", desc = "Resize window up" },
-    ["<C-w>j"] = { ":resize +5<CR>", desc = "Resize window down" },
-  },
-  v = {
-    [">"] = { ">gv", "indent" },
-  },
-  i = {
-    ["jj"] = { "<ESC>" },
-  },
-}
+-- Run nearest test
+map("n", "<leader>tt", function()
+  require("neotest").run.run()
+end, { desc = "Run nearest test" })
 
-M.neotest = {
-  n = {
+-- Run file test
+map("n", "<leader>tf", function()
+  require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "Run file test" })
 
-    ["<leader>tt"] = {
-      function()
-        require("neotest").run.run()
-      end,
-      "Run nearest test",
-    },
-    ["<leader>tf"] = {
-      function()
-        require("neotest").run.run(vim.fn.expand "%")
-      end,
+-- Test output
+map("n", "<leader>to", ":Neotest output<CR>", { desc = "Test output" })
 
-      "Run file test",
-    },
-    ["<leader>to"] = {
-      ":Neotest output<CR>",
-      "Test output",
-    },
-    ["<leader>ts"] = {
-      ":Neotest summary<CR>",
-      "Test summary",
-    },
-  },
-}
+-- Test summary
+map("n", "<leader>ts", ":Neotest summary<CR>", { desc = "Test summary" })
 
--- Overwrite nvchad 'w' letter
-M.lsp_workspace = {
-  n = {
+-- LSP workspace mappings
 
-    ["<leader>Wa"] = {
-      vim.lsp.buf.add_workspace_folder,
-      "Add workspace folder",
-    },
+-- Add workspace folder
+map("n", "<leader>Wa", function()
+  vim.lsp.buf.add_workspace_folder()
+end, { desc = "Add workspace folder" })
 
-    ["<leader>Wr"] = {
-      vim.lsp.buf.remove_workspace_folder,
-      "Remove workspace folder",
-    },
-    ["<leader>Wl"] = {
-      function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-      end,
-      "List workspace folders",
-    },
-  },
-}
+-- Remove workspace folder
+map("n", "<leader>Wr", function()
+  vim.lsp.buf.remove_workspace_folder()
+end, { desc = "Remove workspace folder" })
 
-M.which_key = {
-  n = {
+-- List workspace folders
+map("n", "<leader>Wl", function()
+  print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, { desc = "List workspace folders" })
 
-    ["<leader>WK"] = {
+-- Which-key mappings
 
-      "<cmd>WhichKey<CR>",
-      "Which-key all keymaps",
-    },
-    ["<leader>Wk"] = {
-      function()
-        local input = vim.fn.input "WhichKey: "
+-- Which-key all keymaps
+map("n", "<leader>WK", function()
+  vim.cmd("WhichKey")
+end, { desc = "Which-key all keymaps" })
 
-        vim.cmd("WhichKey " .. input)
-      end,
-      "Which-key query lookup",
-    },
-  },
-}
+-- Which-key query lookup
+map("n", "<leader>Wk", function()
+  local input = vim.fn.input("WhichKey: ")
+  vim.cmd("WhichKey " .. input)
+end, { desc = "Which-key query lookup" })
 
-M.nvimtree = {
-  plugin = true,
+-- NvimTree mapping
 
-  n = {
-    ["<leader>o"] = { "<cmd>NvimTreeFocus<CR>", "Focus nvimtree" },
-  },
-}
+-- Focus nvimtree
+map("n", "<leader>o", "<cmd> NvimTreeFocus <CR>", { desc = "Focus nvimtree" })
 
-local toggle_float = {
+-- NvTerm mappings
 
-  function()
-    require("nvterm.terminal").toggle "float"
-  end,
+-- Toggle floating term
+map({ "n", "t" }, "<F7>", function()
+  require("nvterm.terminal").toggle "float"
+end, { desc = "Toggle floating term" })
 
-  "Toggle floating term",
-}
+-- Toggle horizontal term
+map({ "n", "t" }, "<C-\\>", function()
+  require("nvterm.terminal").toggle "horizontal"
+end, { desc = "Toggle horizontal term" })
 
-M.nvterm = {
-
-  plugin = true,
-  t = {
-
-    ["<F7>"] = toggle_float,
-    ["<C-\\>"] = {
-
-      function()
-        require("nvterm.terminal").toggle "horizontal"
-      end,
-      "Toggle horizontal term",
-    },
-
-    ["<C-|>"] = {
-      function()
-        require("nvterm.terminal").toggle "vertical"
-      end,
-
-      "Toggle vertical term",
-    },
-  },
-  n = {
-
-    ["<F7>"] = toggle_float,
-    ["<C-\\>"] = {
-
-      function()
-        require("nvterm.terminal").toggle "horizontal"
-      end,
-      "Toggle horizontal term",
-    },
-
-    ["<C-|>"] = {
-      function()
-        require("nvterm.terminal").toggle "vertical"
-      end,
-
-      "Toggle vertical term",
-    },
-  },
-}
-
--- Function to set mappings from the M table
-
-local function set_mappings(mappings)
-  for _, section in pairs(mappings) do
-    -- Skip 'plugin' key if present
-    if section.plugin then
-      section.plugin = nil
-    end
-    for mode, mode_mappings in pairs(section) do
-      for key, mapping_info in pairs(mode_mappings) do
-        local opts = {}
-        local rhs = nil
-
-        if type(mapping_info) == "table" then
-          rhs = mapping_info[1]
-          opts.desc = mapping_info[2]
-
-          if mapping_info.opts then
-            opts = vim.tbl_extend("force", opts, mapping_info.opts)
-          end
-        else
-          rhs = mapping_info
-        end
-
-        map(mode, key, rhs, opts)
-      end
-    end
-  end
-end
-
-set_mappings(M)
+-- Toggle vertical term
+map({ "n", "t" }, "<C-|>", function()
+  require("nvterm.terminal").toggle "vertical"
+end, { desc = "Toggle vertical term" })
