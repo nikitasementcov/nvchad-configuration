@@ -24,7 +24,8 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        "vim", "vimdoc",
+        "vim",
+        "vimdoc",
         "lua",
         "html",
         "css",
@@ -42,5 +43,12 @@ return {
         -- },
       },
     },
+  },
+  {
+    "mhartington/formatter.nvim",
+    event = "VeryLazy",
+    opts = function()
+      return require "configs.formatter"
+    end,
   },
 }

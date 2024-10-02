@@ -25,9 +25,11 @@ map("n", "<leader>Q", function()
 end, { desc = "Diagnostic setloclist" })
 
 -- LSP formatting (overwrite formatting)
-map("n", "<leader>fm", function()
+map("n", "<leader>fM", function()
   vim.lsp.buf.format { async = true }
-end, { desc = "LSP formatting" })
+end, { desc = "Format (LSP)" })
+-- Formatting
+map("n", "<leader>fm", ":FormatWrite<CR>", { desc = "Format and write" })
 
 -- Resize splits
 map("n", "<C-w>h", ":vertical resize -5<CR>", { desc = "Resize window left" })
@@ -47,7 +49,7 @@ end, { desc = "Run nearest test" })
 
 -- Run file test
 map("n", "<leader>tf", function()
-  require("neotest").run.run(vim.fn.expand("%"))
+  require("neotest").run.run(vim.fn.expand "%")
 end, { desc = "Run file test" })
 
 -- Test output
@@ -77,12 +79,12 @@ end, { desc = "List workspace folders" })
 
 -- Which-key all keymaps
 map("n", "<leader>WK", function()
-  vim.cmd("WhichKey")
+  vim.cmd "WhichKey"
 end, { desc = "Which-key all keymaps" })
 
 -- Which-key query lookup
 map("n", "<leader>Wk", function()
-  local input = vim.fn.input("WhichKey: ")
+  local input = vim.fn.input "WhichKey: "
   vim.cmd("WhichKey " .. input)
 end, { desc = "Which-key query lookup" })
 
