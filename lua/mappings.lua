@@ -37,6 +37,12 @@ map("n", "<C-w>l", ":vertical resize +5<CR>", { desc = "Resize window right" })
 map("n", "<C-w>k", ":resize -5<CR>", { desc = "Resize window up" })
 map("n", "<C-w>j", ":resize +5<CR>", { desc = "Resize window down" })
 
+-- navigation to tmux splits
+map("n", "<c-l>", "<cmd>:TmuxNavigateRight<cr>", { desc = "Tmux Right" })
+map("n", "<c-h>", "<cmd>:TmuxNavigateLeft<cr>", { desc = "Tmux Left" })
+map("n", "<c-k>", "<cmd>:TmuxNavigateUp<cr>", { desc = "Tmux Up" })
+map("n", "<c-j>", "<cmd>:TmuxNavigateDown<cr>", { desc = "Tmux Down" })
+
 -- Visual mode mappings
 map("v", ">", ">gv", { desc = "indent" })
 

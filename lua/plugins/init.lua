@@ -14,6 +14,19 @@ return {
   },
 
   {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    -- keymaps in mappings config
+  },
+
+  {
     "NvChad/nvterm",
     config = function()
       require("nvterm").setup()
